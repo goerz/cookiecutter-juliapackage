@@ -1,0 +1,7 @@
+name = "{{ cookiecutter.project_name.replace('.jl', '') }}"
+uuid = "{{ cookiecutter.uuid }}"
+authors = ["{{ cookiecutter.author }} <{{ cookiecutter.email }}>"]
+version = "{{ cookiecutter.version }}"
+
+[compat]
+julia = "{{ cookiecutter.julia_version }}"

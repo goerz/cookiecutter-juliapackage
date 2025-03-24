@@ -1,0 +1,11 @@
+{
+  "project_name": "MyPackage.jl",
+  "author": "Michael Goerz",
+  "email": "mail@michaelgoerz.net",
+  "github_org": "goerz",
+  "year": "2025",
+  "version": "0.1.0-dev",
+  "uuid": "00000000-0000-0000-0000-000000000000",
+  "julia_version": "1.11",
+  "_copy_without_render": ["*.yml"]
+}

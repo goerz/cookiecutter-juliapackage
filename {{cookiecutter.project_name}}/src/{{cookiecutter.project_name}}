@@ -1,0 +1,5 @@
+module {{ cookiecutter.project_name.replace('.jl', '') }}
+
+# Write your package code here.
+
+end
