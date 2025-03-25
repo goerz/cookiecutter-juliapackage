@@ -53,7 +53,8 @@ Afterwards,
 * Documentation is build on CI and deployed to GitHub Pages
 * For pull requests, CI deploys preview documentation and automatically cleans it up
 * [CompatHelper](https://github.com/JuliaRegistries/CompatHelper.jl) and [TagBot](https://github.com/JuliaRegistries/TagBot)
-* Code coverage with [Codecov](https://about.codecov.io)
+* Code coverage with [Codecov](https://about.codecov.io). Locally, coverage can be created with `make coverage`
+* Generate a local HTML coverage report with `make htmlcoverage`
 * Automatic code style via [JuliaFormatter](https://github.com/domluna/JuliaFormatter.jl), enforced on CI.
 * The default branch is `master`, [not `main`](https://docs.github.com/en/account-and-profile/setting-up-and-managing-your-personal-account-on-github/managing-user-account-settings/managing-the-default-branch-name-for-your-repositories)
 * Spell-checking with [typos](https://github.com/crate-ci/typos) on CI.

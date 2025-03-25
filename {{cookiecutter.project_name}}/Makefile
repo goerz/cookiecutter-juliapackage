@@ -1,4 +1,4 @@
-.PHONY: help devrepl test docs clean codestyle distclean
+.PHONY: help devrepl test coverage htmlcoverage docs clean codestyle distclean
 .DEFAULT_GOAL := help
 
 JULIA ?= julia
@@ -22,10 +22,16 @@ help:  ## show this help
 	@julia -e "$$PRINT_HELP_JLSCRIPT" < $(MAKEFILE_LIST)
 
 devrepl:  test/Manifest.toml ## Start an interactive REPL for testing and building documentation
-	$(JULIA) --project=test --banner=no --startup-file=yes
+	$(JULIA) --project=test
 
-test: test/Manifest.toml ## Run the test suite
-	$(JULIA) --project=test --code-coverage=.coverage/tracefile-%p.info --banner=no --startup-file=yes -e 'include("test/runtests.jl")'
+test: ## Run the test suite
+	$(JULIA) --project=. -e 'import Pkg; Pkg.test(;coverage=false, julia_args=["--check-bounds=yes", "--compiled-modules=yes", "--depwarn=yes"], force_latest_compatible_version=false, allow_reresolve=true)'
+
+coverage: test/Manifest.toml ## Run the test suite with coverage
+	$(JULIA) --project=test -e 'using LocalCoverage; report = generate_coverage("{{ cookiecutter.project_name.replace('.jl', '') }}"; run_test = true); show(report)'
+
+htmlcoverage: test/Manifest.toml ## Run the test suite with coverage and generate an HTML report in ./coverage
+	$(JULIA) --project=test -e 'using LocalCoverage; html_coverage("{{ cookiecutter.project_name.replace('.jl', '') }}"; dir = "coverage")'
 
 docs: docs/Manifest.toml ## Build the documentation
 	$(JULIA) --project=docs docs/make.jl
@@ -34,7 +40,8 @@ clean: ## Clean up build/doc/testing artifacts
 	rm -f *.jl.*.cov
 	rm -f *.jl.cov
 	rm -f *.jl.mem
-	rm -rf /docs/build
+	rm -rf coverage
+	rm -rf docs/build
 
 codestyle: test/Manifest.toml ## Apply the codestyle to the entire project
 	$(JULIA) --project=test -e 'using JuliaFormatter; format(["src", "docs", "test"], verbose=true)'
