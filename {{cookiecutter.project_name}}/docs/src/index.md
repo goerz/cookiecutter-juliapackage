@@ -1,14 +1,17 @@
-```@meta
-CurrentModule = C13NV
+# {{ cookiecutter.project_name }}
+
+
+```@eval
+using Markdown
+using Pkg
+
+VERSION = Pkg.dependencies()[Base.UUID("{{ cookiecutter.uuid }}")].version
+
+github_badge = "[![Github](https://img.shields.io/badge/{{  cookiecutter.github_org }}-{{ cookiecutter.project_name  }}-blue.svg?logo=github)](https://github.com/{{ cookiecutter.github_org }}/{{ cookiecutter.project_name }})"
+
+version_badge = "![v$VERSION](https://img.shields.io/badge/version-v$(replace("$VERSION", "-" => "--"))-green.svg)"
+
+Markdown.parse("$github_badge $version_badge")
 ```
 
-# C13NV
-
-Documentation for [C13NV](https://github.com/goerz/C13NV.jl).
-
-```@index
-```
-
-```@autodocs
-Modules = [C13NV]
-```
+Documentation for [{{ cookiecutter.project_name.replace('.jl', '') }}](https://github.com/{{ cookiecutter.github_org }}/{{ cookiecutter.project_name }}).

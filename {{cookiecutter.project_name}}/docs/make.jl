@@ -11,11 +11,11 @@ GITHUB = "https://github.com/{{ cookiecutter.github_org }}/{{ cookiecutter.proje
 
 println("Starting makedocs")
 
-PAGES = ["Home" => "index.md",]
+PAGES = ["Home" => "index.md", "API" => "api.md"]
 
 makedocs(;
-    authors = "Michael Goerz <mail@michaelgoerz.net> and contributors",
-    sitename = "{{ cookiecutter.project_name }}",
+    authors = AUTHORS,
+    sitename = "$NAME.jl",
     format = Documenter.HTML(;
         prettyurls = true,
         canonical = "https://{{ cookiecutter.github_org }}.github.io/{{ cookiecutter.project_name }}",
