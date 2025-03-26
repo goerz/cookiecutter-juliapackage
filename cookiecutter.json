@@ -2,10 +2,20 @@
   "project_name": "MyPackage.jl",
   "author": "Michael Goerz",
   "email": "mail@michaelgoerz.net",
-  "github_org": "goerz",
+  "owner": "goerz",
   "year": "2025",
   "version": "0.1.0-dev",
   "uuid": "00000000-0000-0000-0000-000000000000",
   "julia_version": "1.11",
-  "_copy_without_render": ["*.yml"]
+  "_copy_without_render": ["*.yml"],
+   "__prompts__": {
+    "project_name": "Package name (including .jl suffix)",
+    "author": "Author name",
+    "email": "Author email address",
+    "owner": "User or org name owning the repo on GitHub",
+    "year": "Copyright year",
+    "version": "Initial version",
+    "uuid": "Package UUID",
+    "julia_version": "Minimum Julia version"
+   }
 }

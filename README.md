@@ -37,7 +37,7 @@ Afterwards,
   * `project_name`: The name of the package, including the `.jl` suffix
   * `author`: The name of the author, in the `Project.toml` and `LICENSE` file
   * `email`: The email address under which to reach the author
-  * `github_org`: The name of the user or organization hosting the project on GitHub
+  * `owner`: The name of the user or organization hosting the project on GitHub
   * `year`: The year in the copyright notice
   * `version`: The initial version in the `Project.toml`
   * `julia_version`: The minimum supported Julia version
