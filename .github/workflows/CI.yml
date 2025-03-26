@@ -1,0 +1,54 @@
+name: CI
+on:
+  push:
+    branches:
+      - master
+    tags:
+      - '*'
+  pull_request:
+    branches:
+      - master
+jobs:
+  test:
+    name: Test
+    runs-on: ubuntu-latest
+    timeout-minutes: 60
+    permissions: # needed to allow julia-actions/cache to proactively delete old caches that it has created
+      actions: write
+      contents: read
+    strategy:
+      fail-fast: false
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          path: 'cookiecutter-juliapackage'
+      - name: Set up Git
+        shell: bash
+        run: |
+          git config --global user.name "Michael Goerz"
+          git config --global user.email "<mail@michaelgoerz.net>"
+          git config --global init.defaultBranch master
+      - uses: julia-actions/setup-julia@v2
+        with:
+          version: '1'
+          arch: 'x64'
+      - uses: julia-actions/cache@v2
+      - name: Install cookiecutter
+        shell: bash
+        run: |
+          pip install cookiecutter
+      - name: Generate project
+        shell: bash
+        run: |
+          cookiecutter --no-input --keep-project-on-failure cookiecutter-juliapackage project_name="MyGithubTestingProject.jl"
+      - name: Show generated files
+        shell: bash
+        run: |
+          tree MyGithubTestingProject.jl
+      - name: Run generated project
+        shell: bash
+        run: |
+          cd MyGithubTestingProject.jl
+          make test
+          make coverage
+          make docs
