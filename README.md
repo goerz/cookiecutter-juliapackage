@@ -1,5 +1,7 @@
 # Cookiecutter Template for Julia Projects
 
+[![CI](https://github.com/goerz/cookiecutter-juliapackage/actions/workflows/CI.yml/badge.svg)](https://github.com/goerz/cookiecutter-juliapackage/actions/workflows/CI.yml)
+
 ## Prerequisites
 
 * A Unix-based operating system (your mileage may vary on Windows)
