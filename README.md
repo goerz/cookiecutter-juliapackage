@@ -62,8 +62,20 @@ Afterwards,
 * Spell-checking with [typos](https://github.com/crate-ci/typos) on CI.
 * Versions on `master` must have a `-dev` or `+dev` suffix. Release versions are allowed only on `release-*` branches
 
+## Package Extensions
+
+If you would like to add [extension modules](https://docs.julialang.org/en/v1/manual/code-loading/#man-extensions) to the package, make sure to edit the `Makefile` to take into account the `ext` folder:
+
+* In the `coverage` target, make sure that `generate_coverage` is called with the additional option `folder_list = ["src", "ext"])`
+* In the `codestyle` target, add `"ext"` to the list of folders being formatted.
+
+
 ## Development
 
 Various development tasks can be achieved via the `Makefile`. Run `make` (or `make help`) for an overview.
 
 Running `make devrepl` opens a development REPL where the tests can be run with `include("test/runtests.jl")` and the documentation can be built using `include("docs/make.jl")`.
+
+Review the `CONTRIBUTING.md` file in the generated project.
+
+The [`git merge-pr` script](https://github.com/goerz/git-merge-pr)  is recommended over merging pull requests via the GitHub UI.
