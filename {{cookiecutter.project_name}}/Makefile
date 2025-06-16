@@ -2,7 +2,6 @@
 .DEFAULT_GOAL := help
 
 JULIA ?= julia
-PORT ?= 8000
 
 define PRINT_HELP_JLSCRIPT
 rx = r"^([a-z0-9A-Z_-]+):.*?##[ ]+(.*)$$"
