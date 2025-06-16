@@ -16,13 +16,21 @@ end
 endef
 export PRINT_HELP_JLSCRIPT
 
+define DEVREPL_INIT_JLSCRIPT
+using Revise
+println("""
+**Development REPL for {{ cookiecutter.project_name }}** (Revise active)
+""")
+endef
+export DEVREPL_INIT_JLSCRIPT
+
 
 help:  ## show this help
 	@git config --local blame.ignoreRevsFile .git-blame-ignore-revs
 	@julia -e "$$PRINT_HELP_JLSCRIPT" < $(MAKEFILE_LIST)
 
 devrepl:  test/Manifest.toml ## Start an interactive REPL for testing and building documentation
-	$(JULIA) --project=test
+	$(JULIA) --project=test -e "$$DEVREPL_INIT_JLSCRIPT" -i
 
 test: ## Run the test suite
 	$(JULIA) --project=. -e 'import Pkg; Pkg.test(;coverage=false, julia_args=["--check-bounds=yes", "--compiled-modules=yes", "--depwarn=yes"], force_latest_compatible_version=false, allow_reresolve=true)'
