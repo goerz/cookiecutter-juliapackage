@@ -48,11 +48,11 @@ Afterwards,
 ## Features
 
 * `Makefile` for development workflows (see below)
-* Test environment configured with `test/Project.toml` (requires Julia 1.11 for the [`[Sources]` section](https://github.com/crate-ci/typos))
+* Test environment configured with `test/Project.toml` (requires Julia 1.11 for the [`[sources]` section](https://pkgdocs.julialang.org/v1/toml-files/#The-[sources]-section))
 * Automated testing on CI
 * Documentation via [Documenter](https://documenter.juliadocs.org/stable/)
-* Documentation build environment configured with `docs/Project.toml` (requires Julia 1.11 for the [`[Sources]` section](https://github.com/crate-ci/typos))
-* Documentation is build on CI and deployed to GitHub Pages
+* Documentation build environment configured with `docs/Project.toml` (requires Julia 1.11 for the [`[sources]` section](https://pkgdocs.julialang.org/v1/toml-files/#The-[sources]-section))
+* Documentation is built on CI and deployed to GitHub Pages
 * For pull requests, CI deploys preview documentation and automatically cleans it up
 * [CompatHelper](https://github.com/JuliaRegistries/CompatHelper.jl) and [TagBot](https://github.com/JuliaRegistries/TagBot)
 * Code coverage with [Codecov](https://about.codecov.io). Locally, coverage can be created with `make coverage`

@@ -135,7 +135,9 @@ jobs:
                   @error "Invalid version $VERSION on release branch"
                   exit(1)
               end
-          elseif (ENV["GITHUB_REF_TYPE"] == "branch") && (BRANCH != "master")
+          elseif ENV["GITHUB_REF_TYPE"] == "branch"
+              # Any branch other than a release branch (master included) must
+              # carry a dev suffix; release versions live only on release-* branches.
               if ("dev" in VERSION.prerelease) || ("dev" in VERSION.build)
                   println("Version $VERSION OK with dev-suffix on $BRANCH")
               else

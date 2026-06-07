@@ -29,7 +29,7 @@ Alternatively, if you are on Unix and have `make` installed, run `make codestyle
 
 ## Running the Tests
 
-There are a few way to run the tests:
+There are a few ways to run the tests:
 
 * Start a Julia REPL with `julia --project=.`, then type `] test`.
 
@@ -48,7 +48,7 @@ Use one of the following two possibilities to build the documentation locally:
 
 * If you are on Unix and have `make` installed, run `make docs`. See `make help` for details.
 
-This will build the documentation in `./docs/build`. The preview it, you must run a web server, either via the [LiveServer](https://github.com/JuliaDocs/LiveServer.jl) package, or (if you have Python installed), via `python3 -m http.server`. See the [Documenter Guide](https://documenter.juliadocs.org/stable/man/guide/#Note-6b659cc6046c5199) for details.
+This will build the documentation in `./docs/build`. To preview it, you must run a web server, either via the [LiveServer](https://github.com/JuliaDocs/LiveServer.jl) package, or (if you have Python installed), via `python3 -m http.server`. See the [Documenter Guide](https://documenter.juliadocs.org/stable/man/guide/#Note-6b659cc6046c5199) for details.
 
 Run `make clean` or `make distclean` to remove the documentation build, see `make help` for details.
 
@@ -59,7 +59,7 @@ Run `make clean` or `make distclean` to remove the documentation build, see `mak
 
 * PRs can be merged by anyone with commit access.
 * PRs by authors with commit access can be self-merged after approval from a (co-)maintainer, or directly (without review) for trivial PRs
-* The merge pattern outlined in [the README of the `git-merge-pr` script](https://github.com/goerz/git-merge-pr?tab=readme-ov-file#introduction) is encouraged. That is, PRs should be rebased on the current `master`, should preserve any clean history or squash unclean history, and be merged with a merge commit. That merge commit is a good place to also apply editorial changes, such as updating the version number of the changelog.
+* The merge pattern outlined in [the README of the `git-merge-pr` script](https://github.com/goerz/git-merge-pr?tab=readme-ov-file#introduction) is encouraged. That is, PRs should be rebased on the current `master`, should preserve any clean history or squash unclean history, and be merged with a merge commit. That merge commit is a good place to also apply editorial changes.
 
 
 ## Release process
@@ -69,7 +69,6 @@ Releases are made by the package maintainer only.
 - [ ] Create a `release-x.y.z` branch
 - [ ] Create a single "release commit":
     - [ ] Check the version number in `Project.toml`, bumping or removing a `-dev` suffix as necessary
-    - [ ] Ensure the `CHANGELOG.md` is complete and up-to-date
 - [ ] Push the `release-x.y.z` branch, but do not create a pull request
 - [ ] Comment `@JuliaRegistrator register` on the commit that should be tagged as the release
 - [ ] Wait for the registration to go through, for TagBot to tag the commit, and for the documentation to be built and deployed
