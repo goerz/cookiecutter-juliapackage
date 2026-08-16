@@ -52,6 +52,7 @@ Afterwards,
 * Automated testing on CI
 * Documentation via [Documenter](https://documenter.juliadocs.org/stable/)
 * Documentation build environment configured with `docs/Project.toml` (requires Julia 1.11 for the [`[sources]` section](https://pkgdocs.julialang.org/v1/toml-files/#The-[sources]-section))
+* The `test` and `docs` environments are declared as a [Pkg workspace](https://pkgdocs.julialang.org/v1/workspaces/) in the top-level `Project.toml`. On Julia 1.12 and later, they resolve into a single manifest at the project root, so tests and documentation builds see identical package versions
 * Documentation is built on CI and deployed to GitHub Pages
 * For pull requests, CI deploys preview documentation and automatically cleans it up
 * [CompatHelper](https://github.com/JuliaRegistries/CompatHelper.jl) and [TagBot](https://github.com/JuliaRegistries/TagBot)
@@ -74,7 +75,7 @@ If you would like to add [extension modules](https://docs.julialang.org/en/v1/ma
 
 Various development tasks can be achieved via the `Makefile`. Run `make` (or `make help`) for an overview.
 
-Running `make devrepl` opens a development REPL where the tests can be run with `include("test/runtests.jl")` and the documentation can be built using `include("docs/make.jl")`.
+Running `make devrepl` opens a development REPL where the tests can be run with `include("test/runtests.jl")` and the documentation can be built using `include("docs/make.jl")`. The REPL activates the `test` project and puts the `docs` project on the `LOAD_PATH`, with all versions pinned by the shared workspace manifest. It requires Julia 1.12 or later, and `Revise` installed in the default (global) environment.
 
 Review the `CONTRIBUTING.md` file in the generated project.
 

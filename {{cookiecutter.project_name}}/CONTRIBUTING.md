@@ -18,39 +18,82 @@ To make a good PR, follow these steps:
 6. Feel free to explicitly tag (with `@`) one of the maintainers to request a review of your PR when it is ready.
 
 
-## Source Code Formatting
+## Development Environments
 
-This project uses a code style described in `.JuliaFormatter.toml` and enforced via [JuliaFormatter](https://github.com/domluna/JuliaFormatter.jl). For pull requests, adherence to the code style is automatically checked during continuous integration.
+The package is developed against two dedicated environments: [`test/`](test/) for running the test suite, and [`docs/`](docs/) for building the documentation. Each has its own `Project.toml` and sources the local package via a `[sources]` entry, so both always use the current checkout. The `test` environment also contains the tooling for coverage analysis (`LocalCoverage`) and code formatting (`JuliaFormatter`). Adding a dependency that is only needed for testing or only for the documentation goes into the respective `Project.toml`, not into the package's own `Project.toml`.
 
-To apply the code style locally, you should have `JuliaFormatter` installed in your global Julia environment. Then, in a Julia REPL within the project folder, run `using JuliaFormatter; format(".")`.
+The top-level `Project.toml` declares a [Pkg workspace](https://pkgdocs.julialang.org/v1/workspaces/) containing the `test` and `docs` projects. On Julia >= 1.12, all three environments then resolve into a single manifest at the repository root, guaranteeing consistent package versions between running the tests and building the documentation. On older Julia versions, the workspace is ignored and `test/` and `docs/` keep dedicated manifests. Local development requires Julia >= 1.11 (for `[sources]`).
 
-Alternatively, if you are on Unix and have `make` installed, run `make codestyle`. See `make help` for details.
+The recommended workflow uses the [`Makefile`](Makefile); run `make help` to see all targets. On systems without `make`, the underlying commands can be read directly from the `Makefile`.
+
+Use `make clean` to remove coverage and build artifacts, or `make distclean` to restore a clean checkout. Also run `make distclean` when switching between Julia versions, so that no stale manifests are left behind.
+
+
+## Development REPL
+
+A "development REPL" can be started via
+
+```
+make devrepl
+```
+
+It is based on the workspace feature and thus requires Julia >= 1.12. This is the recommended way to work interactively. The REPL activates the `test` project and adds the `docs` project to the `LOAD_PATH`, so that the package, the test dependencies, and the documentation dependencies are all available, at the versions pinned in the shared workspace manifest. `Revise` is loaded from your default (global) Julia environment and must be installed there. Inside the REPL:
+
+* `include("test/runtests.jl")` — run the entire test suite in-process (with `Revise` active, this picks up edits to `src/` automatically).
+* `include("docs/make.jl")` — build the documentation.
+
+Repeated test runs or documentation builds are much faster this way, since they pay no startup cost.
 
 
 ## Running the Tests
 
-There are a few ways to run the tests:
+* Run the full test suite in the `test` environment:
 
-* Start a Julia REPL with `julia --project=.`, then type `] test`.
+  ```
+  make test
+  ```
 
-* If you are on Unix and have `make` installed, run `make test`. Also consider `make devrepl`, `make coverage` and `make htmlcoverage`, see `make help` for details.
+* Run it with coverage tracking and print a per-file summary:
 
-* Start a Julia REPL in the test environment with `julia --project=test`. Instantiate with `] instantiate`, then run the tests with `include("test/runtests.jl")`. On Julia < 1.11, you may need `] dev .` to ensure that the test environment uses the current code.
+  ```
+  make coverage
+  ```
 
-Run `make clean` or `make distclean` to delete coverage information, see `make help` for details.
+  Use `make htmlcoverage` to instead write a browsable HTML report to `./coverage`. That requires the `genhtml` executable from the [lcov](https://github.com/linux-test-project/lcov) package.
+
+* Or, start the [development REPL](#development-repl) and run the tests from there.
+
+Without `make`, start a Julia REPL in the test environment with `julia --project=test`, instantiate with `] instantiate`, and then run `include("test/runtests.jl")`.
 
 
 ## Building the Documentation
 
-Use one of the following two possibilities to build the documentation locally:
+* Build the HTML documentation into `docs/build`:
 
-* Start a Julia REPL in the docs environment with `julia --project=docs`. Instantiate with `] instantiate`, then build the documentation with `include("docs/make.jl")`. On Julia < 1.11, you may need `] dev .` to ensure that the test environment uses the current code. You can also use `make devrepl`
+  ```
+  make docs
+  ```
 
-* If you are on Unix and have `make` installed, run `make docs`. See `make help` for details.
+* Or, build it from the [development REPL](#development-repl) with `include("docs/make.jl")`, which is the faster iteration loop.
 
-This will build the documentation in `./docs/build`. To preview it, you must run a web server, either via the [LiveServer](https://github.com/JuliaDocs/LiveServer.jl) package, or (if you have Python installed), via `python3 -m http.server`. See the [Documenter Guide](https://documenter.juliadocs.org/stable/man/guide/#Note-6b659cc6046c5199) for details.
+Without `make`, start a Julia REPL in the docs environment with `julia --project=docs`, instantiate with `] instantiate`, and then run `include("docs/make.jl")`.
 
-Run `make clean` or `make distclean` to remove the documentation build, see `make help` for details.
+To preview the built documentation, you must run a web server, either via the [LiveServer](https://github.com/JuliaDocs/LiveServer.jl) package, or (if you have Python installed), via `python3 -m http.server`. See the [Documenter Guide](https://documenter.juliadocs.org/stable/man/guide/#Note-6b659cc6046c5199) for details.
+
+
+## Source Code Formatting
+
+This project uses a code style described in `.JuliaFormatter.toml` and enforced via [JuliaFormatter](https://github.com/domluna/JuliaFormatter.jl). For pull requests, adherence to the code style is automatically checked during continuous integration.
+
+To locally apply the code style, run `make codestyle`, or, if you cannot use `make`, run
+
+```
+julia --project=test
+julia> using JuliaFormatter
+julia> format(["src", "docs", "test"])
+```
+
+in the project root.
 
 
 ## Maintainer Notes

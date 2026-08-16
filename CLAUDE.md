@@ -15,7 +15,7 @@ Generate a project with `cookiecutter gh:goerz/cookiecutter-juliapackage` (or a 
   - `pre_prompt.py` — overwrites `uuid` (fresh `uuid4()`) and `year` in `cookiecutter.json` on every run.
   - `pre_gen_project.py` — validates `project_name` against `^[A-Z][a-zA-Z0-9]{4,}\.jl$`.
   - `post_gen_project.sh` (bash) — `git init`, `make codestyle`, `make distclean`, initial commit, GitHub remote.
-- **`{{cookiecutter.project_name}}/`** — the generated project: `Makefile` (dev driver, `make help`), `Project.toml`, `test/` & `docs/` environments (each a `[sources]` path dep on the package), `docs/make.jl` (Documenter), `.JuliaFormatter.toml` (92-col, 4-space, alignment), and `.github/workflows/` (`CI.yml` with `test`/`docs`/`codestyle` jobs; `CompatHelper.yml`; `TagBot.yml`; `ClearPreview.yml`).
+- **`{{cookiecutter.project_name}}/`** — the generated project: `Makefile` (dev driver, `make help`), `Project.toml` (declares a `[workspace]` over `test` and `docs`), `test/` & `docs/` environments (each a `[sources]` path dep on the package), `CONTRIBUTING.md`, `docs/make.jl` (Documenter), `.JuliaFormatter.toml` (92-col, 4-space, alignment), and `.github/workflows/` (`CI.yml` with `test`/`docs`/`codestyle` jobs; `CompatHelper.yml`; `TagBot.yml`; `ClearPreview.yml`).
 
 ## Editing the Template
 
@@ -46,6 +46,8 @@ Generated-project `Makefile` targets (`make help`): `devrepl`, `test`, `coverage
 - Default branch is `master` (not `main`).
 - The `codestyle` CI job enforces versioning: branch pushes (incl. `master`) must carry a `-dev`/`+dev` suffix; release versions are allowed only on `release-*` branches. Releases are triggered by commenting `@JuliaRegistrator register` on the release commit.
 - The `test`/`docs` environments need Julia ≥ 1.11 for the `[sources]` section.
+- The top-level `Project.toml` declares `[workspace] projects = ["test", "docs"]`. On Julia ≥ 1.12 all three environments resolve into one root `Manifest.toml`; `test/Manifest.toml` and `docs/Manifest.toml` then exist only as empty `make` stamp files. On older Julia the workspace is ignored and those manifests are real.
+- `make devrepl` requires Julia ≥ 1.12: it activates `test` and inserts `docs` into `LOAD_PATH` at position 2 (after the active project, before `@v#.#`), and expects `Revise` in the global environment. `make test`, `make coverage`, and `make codestyle` all run in the `test` environment; `make docs` in `docs`.
 
 ## Package Extensions
 

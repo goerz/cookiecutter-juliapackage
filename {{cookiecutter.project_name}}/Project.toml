@@ -3,5 +3,8 @@ uuid = "{{ cookiecutter.uuid }}"
 authors = ["{{ cookiecutter.author }} <{{ cookiecutter.email }}>"]
 version = "{{ cookiecutter.version }}"
 
+[workspace]
+projects = ["test", "docs"]
+
 [compat]
 julia = "{{ cookiecutter.julia_version }}"

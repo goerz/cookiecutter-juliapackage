@@ -16,9 +16,17 @@ endef
 export PRINT_HELP_JLSCRIPT
 
 define DEVREPL_INIT_JLSCRIPT
+@assert VERSION >= v"1.12" "The development REPL requires Julia >= 1.12 (Pkg workspace support)"
+# The `docs` project goes after the active `test` project but before the
+# shared `@v#.#` environment, so that docs-only dependencies always load at
+# the versions pinned in the workspace manifest.
+insert!(LOAD_PATH, 2, abspath("docs"))
 using Revise
 println("""
 **Development REPL for {{ cookiecutter.project_name }}** (Revise active)
+
+* `include("test/runtests.jl")` – Run the test suite
+* `include("docs/make.jl")` – Build the documentation
 """)
 endef
 export DEVREPL_INIT_JLSCRIPT
@@ -28,11 +36,11 @@ help:  ## show this help
 	@git config --local blame.ignoreRevsFile .git-blame-ignore-revs
 	@julia -e "$$PRINT_HELP_JLSCRIPT" < $(MAKEFILE_LIST)
 
-devrepl:  test/Manifest.toml ## Start an interactive REPL for testing and building documentation
+devrepl: Manifest.toml ## Start an interactive REPL for testing and building documentation (requires Julia >= 1.12)
 	$(JULIA) --project=test -e "$$DEVREPL_INIT_JLSCRIPT" -i
 
-test: ## Run the test suite
-	$(JULIA) --project=. -e 'import Pkg; Pkg.test(;coverage=false, julia_args=["--check-bounds=yes", "--compiled-modules=yes", "--depwarn=yes"], force_latest_compatible_version=false, allow_reresolve=true)'
+test: test/Manifest.toml ## Run the test suite
+	$(JULIA) --project=test --banner=no --startup-file=yes --check-bounds=yes --depwarn=yes -e 'include("test/runtests.jl")'
 
 coverage: test/Manifest.toml ## Run the test suite with coverage
 	$(JULIA) --project=test -e 'using LocalCoverage; report = generate_coverage("{{ cookiecutter.project_name.replace('.jl', '') }}"; run_test = true); show(report)'
@@ -44,9 +52,10 @@ docs: docs/Manifest.toml ## Build the documentation
 	$(JULIA) --project=docs docs/make.jl
 
 clean: ## Clean up build/doc/testing artifacts
-	rm -f *.jl.*.cov
-	rm -f *.jl.cov
-	rm -f *.jl.mem
+	rm -f *.jl.*.cov src/*.jl.*.cov test/*.jl.*.cov
+	rm -f *.jl.cov src/*.jl.cov test/*.jl.cov
+	rm -f *.jl.mem src/*.jl.mem test/*.jl.mem
+	rm -f lcov.info
 	rm -rf coverage
 	rm -rf docs/build
 
@@ -60,8 +69,15 @@ distclean: clean ## Restore to a clean checkout state
 
 test/Manifest.toml: test/Project.toml
 	@git config --local blame.ignoreRevsFile .git-blame-ignore-revs
-	$(JULIA) --project=test -e 'using Pkg; Pkg.instantiate()'
+	$(JULIA) --project=test -e 'using Pkg; Pkg.resolve(); Pkg.instantiate()'
+	@touch $@  # mark as instantiated (empty file) on Julia >= 1.12
 
 docs/Manifest.toml: docs/Project.toml
 	@git config --local blame.ignoreRevsFile .git-blame-ignore-revs
-	$(JULIA) --project=docs -e 'using Pkg; Pkg.instantiate()'
+	$(JULIA) --project=docs -e 'using Pkg; Pkg.resolve(); Pkg.instantiate()'
+	@touch $@  # mark as instantiated (empty file) on Julia >= 1.12
+
+# The shared workspace manifest (Julia >= 1.12 only), used by `make devrepl`.
+Manifest.toml: Project.toml test/Project.toml docs/Project.toml
+	@git config --local blame.ignoreRevsFile .git-blame-ignore-revs
+	$(JULIA) --project=. -e 'using Pkg; Pkg.resolve(); Pkg.instantiate()'
