@@ -15,7 +15,7 @@ Generate a project with `cookiecutter gh:goerz/cookiecutter-juliapackage` (or a 
   - `pre_prompt.py` — overwrites `uuid` (fresh `uuid4()`) and `year` in `cookiecutter.json` on every run.
   - `pre_gen_project.py` — validates `project_name` against `^[A-Z][a-zA-Z0-9]{4,}\.jl$`.
   - `post_gen_project.sh` (bash) — `git init`, `make codestyle`, `make distclean`, initial commit, GitHub remote.
-- **`{{cookiecutter.project_name}}/`** — the generated project: `Makefile` (dev driver, `make help`), `Project.toml` (declares a `[workspace]` over `test` and `docs`), `test/` & `docs/` environments (each a `[sources]` path dep on the package), `CONTRIBUTING.md`, `docs/make.jl` (Documenter), `.JuliaFormatter.toml` (92-col, 4-space, alignment), and `.github/workflows/` (`CI.yml` with `test`/`docs`/`codestyle` jobs; `CompatHelper.yml`; `TagBot.yml`; `ClearPreview.yml`).
+- **`{{cookiecutter.project_name}}/`** — the generated project: `Makefile` (dev driver, `make help`), `Project.toml` (declares a `[workspace]` over `test` and `docs`), `test/` & `docs/` environments (each a `[sources]` path dep on the package), `CONTRIBUTING.md`, `docs/make.jl` (Documenter build only), `docs/deploy.jl` (installs only Documenter and calls `deploydocs`), `.JuliaFormatter.toml` (92-col, 4-space, alignment), and `.github/workflows/` (`CI.yml` with `test`/`docs`/`docs-deploy`/`codestyle` jobs, where `docs` builds without write access or secrets and `docs-deploy` deploys the uploaded build with `GITHUB_TOKEN`; `CompatHelper.yml`; `TagBot.yml`; `ClearPreview.yml`).
 
 ## Editing the Template
 

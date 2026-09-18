@@ -24,7 +24,7 @@ Afterwards,
 
 * create the Project on GitHub. Make sure to match the project name (including the `.jl` suffix!)
 * push the project to GitHub (`git push -u origin master`)
-* add an SSH Deploy Key on GitHub, for Documenter
+* add an SSH Deploy Key on GitHub (secret `DOCUMENTER_KEY`), so that tags pushed by TagBot and pull requests opened by CompatHelper trigger CI. The documentation itself is deployed with `GITHUB_TOKEN` and does not use the key.
   - Install the `DocumenterTools` Julia package into your base environment
   - Open a REPL for the generated project (`make devrepl`)
   - Load both `DocumenterTools` and the generated project (e.g., `MyPackage`)

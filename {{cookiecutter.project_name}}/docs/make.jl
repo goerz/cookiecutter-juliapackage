@@ -28,4 +28,4 @@ makedocs(;
 
 println("Finished makedocs")
 
-deploydocs(; repo = "github.com/{{ cookiecutter.owner }}/{{ cookiecutter.project_name }}", devbranch = "master", push_preview = true)
+# The documentation is deployed by `docs/deploy.jl`, in a separate CI job
